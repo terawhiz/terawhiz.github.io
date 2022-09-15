@@ -2,9 +2,9 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>My Notes on Shunt</title>
-    <link>http://localhost:1313/writeups/</link>
+    <link>https://terawhiz.github.io/writeups/</link>
     <description>Recent content in My Notes on Shunt</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language><atom:link href="http://localhost:1313/writeups/index.xml" rel="self" type="application/rss+xml" />
+    <language>en-us</language><atom:link href="https://terawhiz.github.io/writeups/index.xml" rel="self" type="application/rss+xml" />
   </channel>
 </rss>

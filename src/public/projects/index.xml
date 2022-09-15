@@ -2,17 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>My Projects on Shunt</title>
-    <link>http://localhost:1313/projects/</link>
+    <link>https://terawhiz.github.io/projects/</link>
     <description>Recent content in My Projects on Shunt</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 01 Sep 2022 10:17:19 +0800</lastBuildDate><atom:link href="http://localhost:1313/projects/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 01 Sep 2022 10:17:19 +0800</lastBuildDate><atom:link href="https://terawhiz.github.io/projects/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Stapes</title>
-      <link>http://localhost:1313/projects/project1/</link>
+      <link>https://terawhiz.github.io/projects/project1/</link>
       <pubDate>Thu, 01 Sep 2022 10:17:19 +0800</pubDate>
       
-      <guid>http://localhost:1313/projects/project1/</guid>
+      <guid>https://terawhiz.github.io/projects/project1/</guid>
       <description></description>
     </item>
     
