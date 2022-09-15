@@ -1,0 +1,50 @@
+baseURL: http://localhost:1313/
+title: Shunt
+keywords: Shunt
+description: Shunt
+paginate: 10
+hasCJKLanguage: true
+languageCode: "en-us"
+theme: # "hugo-theme-onelou"
+markup:
+  goldmark:
+    renderer:
+      unsafe: true
+params:
+  opengraph:
+    github: "https://github.com/terawhiz"
+    twitter: "https://twitter.com/teraWhiz"
+    discord: "https://discord.com/users/508731634535890944"
+  footer:
+    hidePowered: false # Powered by Hugo & theme OneLou
+    beian: # ICP备案号
+    gongan:
+      # code: 公安备案号XXXX
+      # txt: 京公网安备XXXX号
+    since: 2022
+    copyright: XXX
+  prefix:
+    h2: "※ "
+    h3: "✧ "
+menu:
+  navs:
+    - name: Blog
+      params:
+        img: /img/logo1.png
+      url: /blog/
+      weight: 1
+    - name: Writeups
+      params:
+        img: /img/logo2.png
+      weight: 2
+      url: /writeups/
+    - name: Projects
+      params:
+        img: /img/logo2.png
+      url: /projects/
+      weight: 3
+    - name: About
+      params:
+        img: /img/logo3.png
+      url: /about
+      weight: 4

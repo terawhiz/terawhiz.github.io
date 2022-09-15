@@ -1,0 +1,16 @@
+name = "OneLou"
+license = "MIT"
+licenselink = "https://github.com/jyygithub/hugo-theme-onelou/blob/master/LICENSE"
+description = "A simple hugo theme."
+
+homepage = "https://github.com/jyygithub/hugo-theme-onelou"
+demosite = "https://onelou.netlify.app/"
+
+tags = ["blog", "clean", "light", "dark", "personal"]
+features = ["fast", "simple"]
+
+min_version = "0.87.0"
+
+[author]
+  name = "JIANGYY"
+  homepage = "https://jiangyy.com"
