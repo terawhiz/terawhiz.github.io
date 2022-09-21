@@ -1,25 +1,8 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-  xmlns:xhtml="http://www.w3.org/1999/xhtml">
-  <url>
-    <loc>https://terawhiz.github.io/about/</loc>
-    <lastmod>2022-09-15T22:55:00+05:30</lastmod>
-  </url><url>
-    <loc>https://terawhiz.github.io/projects/</loc>
-    <lastmod>2022-09-01T10:17:19+08:00</lastmod>
-  </url><url>
-    <loc>https://terawhiz.github.io/</loc>
-    <lastmod>2022-09-01T10:17:19+08:00</lastmod>
-  </url><url>
-    <loc>https://terawhiz.github.io/projects/project1/</loc>
-    <lastmod>2022-09-01T10:17:19+08:00</lastmod>
-  </url><url>
-    <loc>https://terawhiz.github.io/categories/</loc>
-  </url><url>
-    <loc>https://terawhiz.github.io/blog/</loc>
-  </url><url>
-    <loc>https://terawhiz.github.io/writeups/</loc>
-  </url><url>
-    <loc>https://terawhiz.github.io/tags/</loc>
-  </url>
-</urlset>
+<urlset
+    xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+    xmlns:xhtml="http://www.w3.org/1999/xhtml"
+    ><url>
+            <loc>https://terawhiz.github.io/about/</loc><lastmod>2022-09-20T18:59:49&#43;05:30</lastmod></url><url>
+            <loc>https://terawhiz.github.io/categories/</loc></url><url>
+            <loc>https://terawhiz.github.io/</loc></url><url>
+            <loc>https://terawhiz.github.io/tags/</loc></url></urlset>
