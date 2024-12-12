@@ -1,6 +1,12 @@
 ---
----
+import Link from "./Link.astro";
 
-<footer>
-  <a href="/contact">Contact</a>
+const isHome = Astro.url.pathname === '/';
+---
+{!isHome && (
+  <footer class="flex items-center justify-center">
+    <div class="max-w-screen-xl mx-auto text-center bg-color-4 p-4">
+      <Link href="/contact">Contact</Link>
+    </div>
 </footer>
+)}
