@@ -10,19 +10,19 @@ import logo from "../../public/shunt.svg";
 
 <MainLayout title="Home">
 	<div class="container flex items-center justify-center h-svh mx-auto">
-		<div class="container-2 text-center space-y-4 bg-color-4">
+		<div class="container-2 text-center space-y-4 bg-color-4 py-4">
 			<div class="logo-name flex items-center justify-center">
-				<Image src={logo} alt="Shunt Logo" class="w-36 h-36 select-none" loading="eager" />
-				<span class="font-electrolize text-8xl text-color-1 select-none">Shunt</span>
+				<Image src={logo} alt="Shunt Logo" class="w-28 h-28 sm:w-36 sm:h-36 select-none" loading="eager" />
+				<span class="font-electrolize text-7xl sm:text-8xl text-color-1 select-none">Shunt</span>
 			</div>
 			<div class="links py-3">
 				{
 					HOME_LINKS.map((item) => (
-						<Link href={item.href} className="text-2xl px-6 select-none">{item.label}</Link>
+						<Link href={item.href} className="text-xl sm:text-2xl px-6 select-none">{item.label}</Link>
 					))
 				}
 			</div>
-			<p class="font-robotomono max-w-2xl text-color-1 select-none">
+			<p class="font-robotomono max-w-2xl text-color-1 select-none text-md">
 				An enthusiastic young man who does Linux Vulnerability Research and Exploit Development. Read more <Link href="/about" className="underline font-medium text-color-2">About me</Link></p>
 		</div>
 	</div>

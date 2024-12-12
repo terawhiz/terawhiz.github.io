@@ -8,6 +8,7 @@ const isHome = Astro.url.pathname === '/';
 
 const {title, } = Astro.props;
 ---
+
 <html>
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -22,13 +23,14 @@ const {title, } = Astro.props;
 
     <title>{title}</title>
   </head>
-  <body class="flex flex-col min-h-screen">
-    <Header />
-    <main class="flex-grow py-10 flex justify-center">
-      <div class="w-full max-w-max px-4">
-        <slot />
-      </div>
-    </main>
-    <Footer />
+  <body>
+    <div class="page flex flex-col min-h-screen">
+      { !isHome && <Header /> }
+      <main class="flex-grow flex justify-center">
+        { !isHome && <div class="max-w-full sm:max-w-2xl md:max-w-3xl lg:max-w-4xl mx-auto p-6"> <slot /> </div>}
+        { isHome && <slot /> }
+      </main>
+      { !isHome && <Footer /> }
+    </div>
   </body>
 </html>

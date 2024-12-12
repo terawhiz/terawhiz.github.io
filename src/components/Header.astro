@@ -12,7 +12,7 @@ const isHome = Astro.url.pathname === '/';
 {!isHome && (
 
 <header
-  class="sticky top-0 z-0 flex items-center justify-between py-1 sm:py-4"
+  class="relative top-0 z-0 flex items-center justify-between py-1 sm:py-4"
 >
 <Link href="/" className="ml-2 sm:ml-10 bg-color-4">
       <Image src={logo} alt="Shunt" class="w-14 h-14 select-none" loading="eager" />
