@@ -1,0 +1,11 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-color-4;
+    background-image: radial-gradient(circle, theme('colors.color-3') 0.09rem, transparent 1px);
+    background-size: 20px 20px;
+  }
+}

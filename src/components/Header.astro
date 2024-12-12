@@ -1,0 +1,28 @@
+---
+import { Image } from "astro:assets";
+
+import Link from "./Link.astro";
+
+import { NAV_LINKS } from "../consts";
+import logo from "../../public/shunt.svg";
+
+const isHome = Astro.url.pathname === '/';
+---
+
+{!isHome && (<header
+  class="sticky top-0 z-0 flex items-center justify-between py-4"
+>
+<Link href="/" className="ml-10 bg-color-4">
+      <Image src={logo} alt="Shunt" class="w-14 h-14 select-none" loading="eager" />
+    </Link>
+  
+  <nav class="space-x-10 ml-auto pr-14 py-3 bg-color-4"
+  >
+  {
+    NAV_LINKS.map((item) => (
+      <Link href={item.href} className="text-2xl select-none">{item.label}</Link>
+    ))
+  }
+  </nav>
+</header>
+)}

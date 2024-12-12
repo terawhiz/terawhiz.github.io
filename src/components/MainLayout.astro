@@ -1,0 +1,28 @@
+---
+import Header from "./Header.astro"
+import Footer from "./Footer.astro"
+
+import "../styles/global.css";
+
+const isHome = Astro.url.pathname === '/';
+
+const {title, } = Astro.props;
+---
+<html>
+  <head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
+
+    {
+      isHome && (<link href="https://fonts.googleapis.com/css2?family=Electrolize&display=swap" rel="stylesheet"/>)
+    }
+
+    <title>{title}</title>
+  </head>
+  <body>
+    <Header />
+    <slot />
+    <!-- <Footer /> -->
+  </body>
+</html>
