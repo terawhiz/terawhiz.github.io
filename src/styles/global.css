@@ -74,6 +74,10 @@
       bg-[radial-gradient(100%_50%_at_50%_0%,hsl(var(--primary)/0.16)_0%,hsl(var(--primary)/0)_50%,hsl(var(--primary)/0)_100%)];
   }
 
+  header {
+    @apply relative lg:sticky top-0 z-0 flex items-center justify-between py-2 lg:py-4;
+  }
+
   .disable-transitions,
   .disable-transitions * {
     @apply !transition-none;
