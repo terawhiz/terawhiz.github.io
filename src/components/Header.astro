@@ -22,12 +22,11 @@ const currentPage = Astro.url.pathname;
       <Image src={logo_dark} alt="Shunt" class="dark-logo w-11 h-11 select-none" loading="eager" />
     </Link>
       
-    {/* <nav class="space-x-3 lg:space-x-10 ml-auto pr-4 lg:pr-14"> */}
     <nav class="flex items-center space-x-3 md:space-x-7 lg:space-x-10 pr-6 md:pr-10 lg:pr-14">
     {
       NAV_LINKS.map((item) => (
         <NavLink href={item.href} className={`text-lg ${
-          currentPage.replace('/', '') === item.href.replace('/', '') ? "text-foreground" : "text-muted-foreground"
+          currentPage.replaceAll('/', '') === item.href.replaceAll('/', '') ? "text-foreground" : "text-muted-foreground"
           } select-none`}>{item.label}</Link>
       ))
     }
