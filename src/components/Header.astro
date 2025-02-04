@@ -1,38 +1,36 @@
 ---
-import { Image } from "astro:assets";
-
 import Link from "./Link.astro";
 import NavLink from "./NavLink.astro";
-import ThemeToggle from "../components/ThemeToggle.astro"
-
 import { NAV_LINKS } from "../consts";
-import logo from "../../public/shunt.svg";
-import logo_dark from "../../public/shunt_dark.svg";
 
 const currentPage = Astro.url.pathname;
 ---
 
-{!(currentPage === "/") && (
+{
+  !(currentPage === "/") && (
+    <header class="sticky top-0 z-0 flex items-center justify-between py-2 lg:py-4">
 
-  <header
-    class="page-header"
-  >
-    <Link href="/" className="ml-2 sm:ml-10">
-      <Image src={logo} alt="Shunt" class="light-logo w-11 h-11 select-none" loading="eager" />
-      <Image src={logo_dark} alt="Shunt" class="dark-logo w-11 h-11 select-none" loading="eager" />
-    </Link>
-      
-    <nav class="flex items-center space-x-3 md:space-x-7 lg:space-x-10 pr-6 md:pr-10 lg:pr-14">
-    {
-      NAV_LINKS.map((item) => (
-        <NavLink href={item.href} className={`text-lg ${
-          currentPage.replaceAll('/', '') === item.href.replaceAll('/', '') ? "text-foreground" : "text-muted-foreground"
-          } select-none`}>{item.label}</Link>
-      ))
-    }
+      <a href="/" class="logo ml-10 md:ml-6 lg:ml-2">
+        <img src="#" alt=":|" id="shunt-logo" class="w-11 h-11 transition-opacity">
+      </a>
 
-    <ThemeToggle />
-    </nav>
-  </header>
+      <nav class="flex items-center space-x-3 md:space-x-7 lg:space-x-10 pr-6 md:pr-10 lg:pr-14">
+        {
+          NAV_LINKS.map((item) => (
+            <NavLink href={item.href} className={`text-lg ${
+              currentPage.replaceAll('/', '') === item.href.replaceAll('/', '') ? "text-foreground" : "text-muted-foreground"
+              } select-none`}>{item.label}</Link>
+          ))
+        }
 
-)}
+        <button
+          onclick="toggleTheme()"
+          class="p-2 rounded-full hover:bg-muted-foreground/30 dark:bg-background/30 transition-colors"
+          aria-label="Toggle theme"
+        >
+          <span id="toggle-icon"></span>
+        </button>
+      </nav>
+    </header>
+  )
+}
