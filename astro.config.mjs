@@ -5,7 +5,17 @@ import tailwind from '@astrojs/tailwind';
 
 // https://astro.build/config
 export default defineConfig({
-  integrations: [tailwind()],
-
   site: 'https://terawhiz.github.io/',
+  integrations: [
+    tailwind({
+      applyBaseStyles: false,
+    })
+  ],
+  server: {
+    port: 4321,
+    host: true,
+  },
+  devToolbar: {
+    enabled: false,
+  },
 });

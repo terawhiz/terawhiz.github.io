@@ -1,0 +1,84 @@
+---
+import Header from "./../components/Header.astro"
+import Footer from "./../components/Footer.astro"
+
+import "../styles/global.css"
+
+const isHome = Astro.url.pathname === '/';
+
+const {title, } = Astro.props;
+---
+
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap" rel="stylesheet">
+
+    {
+      isHome && (<link href="https://fonts.googleapis.com/css2?family=Electrolize&display=swap" rel="stylesheet"/>)
+    }
+
+    <title>{title}</title>
+
+    <script>
+     // Cache DOM elements
+      const elements = {
+        root: document.documentElement,
+        toggle: document.getElementById('theme-toggle'),
+        cloudSun: document.querySelector('.light-toggle'),
+        moonStar: document.querySelector('.dark-toggle'),
+        lightLogo: document.querySelector('.light-logo'),
+        darkLogo: document.querySelector('.dark-logo')
+      };
+
+      // Set theme and update UI
+      function setTheme(isDark) {
+        // Toggle dark class on root
+        elements.root.classList.toggle('dark', isDark);
+        
+        // Toggle theme icons
+        elements.cloudSun.classList.toggle('hidden', isDark);
+        elements.moonStar.classList.toggle('hidden', !isDark);
+        
+        // Toggle logos - now properly switching based on theme
+        elements.lightLogo.classList.toggle('hidden', isDark);
+        elements.darkLogo.classList.toggle('hidden', !isDark);
+        
+        // Save theme preference
+        localStorage.setItem('theme', isDark ? 'dark' : 'light');
+      }
+
+      // Initialize theme from localStorage
+      function initTheme() {
+        const storedTheme = localStorage.getItem('theme');
+        setTheme(storedTheme === 'dark');
+      }
+
+      // Toggle theme on click
+      function handleThemeToggle() {
+        const isDark = elements.root.classList.contains('dark');
+        setTheme(!isDark);
+      }
+
+      // Setup
+      initTheme();
+      elements.toggle.addEventListener('click', handleThemeToggle);
+    </script>
+  </head>
+  <body>
+    <div class="grid"></div>
+    <div class="page flex flex-col min-h-screen">
+        { !isHome && <Header /> }
+        <main class="flex-grow flex justify-center">
+          <slot />
+        </main>
+        { !isHome && <Footer /> }
+        <div class="notch"></div>
+    </div>
+  </body>
+</html>

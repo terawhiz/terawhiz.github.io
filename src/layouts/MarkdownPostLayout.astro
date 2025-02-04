@@ -1,0 +1,27 @@
+---
+import MainLayout from "./MainLayout.astro";
+
+const { frontmatter } = Astro.props;
+
+import "../styles/global.css";
+---
+
+<MainLayout>
+    <article class="prose prose-neutral col-start-2 max-w-full mx-auto p-6 sm:max-w-2xl md:max-w-4xl lg:max-w-6xl text-foreground dark:prose-invert">
+        <div class="head-card text-center">
+            <h1>{ frontmatter.title }</h1>
+            <div class="frontmatter flex gap-6">
+                {frontmatter.author && <p>{frontmatter.author}</p>}
+                {frontmatter.description && <p>{frontmatter.description}</p>}
+                {frontmatter.pubDate && <p>{frontmatter.pubDate}</p>}
+                <p>Tags:</p>
+                {
+                    frontmatter.tags && frontmatter.tags.map(
+                        (tag) => <p>{tag}</p>
+                    )
+                }
+            </div>
+        </div>
+        <slot />
+    </article>
+</MainLayout>

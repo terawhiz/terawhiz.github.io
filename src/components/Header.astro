@@ -2,29 +2,38 @@
 import { Image } from "astro:assets";
 
 import Link from "./Link.astro";
+import NavLink from "./NavLink.astro";
+import ThemeToggle from "../components/ThemeToggle.astro"
 
 import { NAV_LINKS } from "../consts";
 import logo from "../../public/shunt.svg";
+import logo_dark from "../../public/shunt_dark.svg";
 
-const isHome = Astro.url.pathname === '/';
+const currentPage = Astro.url.pathname;
 ---
 
-{!isHome && (
+{!(currentPage === "/") && (
 
-<header
-  class="relative top-0 z-0 flex items-center justify-between py-1 sm:py-4"
->
-<Link href="/" className="ml-2 sm:ml-10 bg-color-4">
-      <Image src={logo} alt="Shunt" class="w-14 h-14 select-none" loading="eager" />
+  <header
+    class="relative top-0 z-0 flex items-center justify-between py-2 lg:py-4"
+  >
+    <Link href="/" className="ml-2 sm:ml-10">
+      <Image src={logo} alt="Shunt" class="light-logo w-11 h-11 select-none" loading="eager" />
+      <Image src={logo_dark} alt="Shunt" class="dark-logo w-11 h-11 select-none" loading="eager" />
     </Link>
-  
-  <nav class="space-x-3 lg:space-x-10 ml-auto pr-4 lg:pr-14 bg-color-4">
-  {
-    NAV_LINKS.map((item) => (
-      <Link href={item.href} className="text-2xl select-none">{item.label}</Link>
-    ))
-  }
-  </nav>
-</header>
+      
+    {/* <nav class="space-x-3 lg:space-x-10 ml-auto pr-4 lg:pr-14"> */}
+    <nav class="flex items-center space-x-3 md:space-x-7 lg:space-x-10 pr-6 md:pr-10 lg:pr-14">
+    {
+      NAV_LINKS.map((item) => (
+        <NavLink href={item.href} className={`text-lg ${
+          currentPage === item.href ? "text-foreground" : "text-muted-foreground"
+          } select-none`}>{item.label}</Link>
+      ))
+    }
+
+    <ThemeToggle />
+    </nav>
+  </header>
 
 )}
