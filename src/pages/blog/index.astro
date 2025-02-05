@@ -1,12 +1,39 @@
 ---
+import { getCollection } from "astro:content";
+
 import MainLayout from "../../layouts/MainLayout.astro";
 import Link from "../../components/Link.astro";
----
 
-<MainLayout title="Blog - Shunt">
-  <div>
-    <p>Coming Soon... </p>
-    <p>Checkout my <Link href="https://github.com/terawhiz/CTF-Writeups">CTF writeups</Link> and <Link href="https://github.com/terawhiz/kpwn">Kernel Exploits</Link> repositories.</p>
-  </div>
+const allPosts = await getCollection("blog");
+allPosts.sort((a, b) => {
+  const dateA = new Date(a.data.pubDate);
+  const dateB = new Date(b.data.pubDate);
+  return dateA - dateB; // Descending order
+});
+
+function formatDate(dateString) {
+  const date = new Date(dateString);
+  const day = String(date.getDate()).padStart(2, '0'); // Ensure two digits
+  const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+  const year = date.getFullYear();
+  return `${day}/${month}/${year}`;
+}
+
+---
+<MainLayout title="Archive - Blog">
+  <div class="max-w-3xl mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold text-center text-gray-900 dark:text-white mb-8">Archive of Blog Posts</h1>
+    <ul class="space-y-6">
+      {
+        allPosts.map((post) => (
+          <li class="flex justify-between items-center p-6 bg-muted dark:bg-muted rounded-lg shadow-md dark:shadow-md hover:shadow-lg dark:shadow-muted-foreground dark:hover:shadow-muted-foreground dark:hover:shadow-lg transition-shadow">
+            <a href={`/${post.slug}/`} class="text-md font-semibold text-muted-foreground dark:text-foreground transition-colors">
+              {post.data.title}
+            </a>
+            <span class="text-sm text-muted-foreground">{formatDate(post.data.pubDate)}</span>
+          </li>
+        ))
+      }
+    </ul>
   </div>
 </MainLayout>
