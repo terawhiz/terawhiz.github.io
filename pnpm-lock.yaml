@@ -10,13 +10,13 @@ importers:
     dependencies:
       '@astrojs/mdx':
         specifier: ^4.0.8
-        version: 4.0.8(astro@5.2.3(jiti@1.21.6)(rollup@4.28.1)(typescript@5.7.2)(yaml@2.6.1))
+        version: 4.0.8(astro@5.2.5(jiti@1.21.6)(rollup@4.28.1)(typescript@5.7.2)(yaml@2.6.1))
       '@astrojs/react':
         specifier: ^4.2.0
         version: 4.2.0(@types/react-dom@19.0.3(@types/react@19.0.8))(@types/react@19.0.8)(jiti@1.21.6)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(yaml@2.6.1)
       '@astrojs/tailwind':
         specifier: ^6.0.0
-        version: 6.0.0(astro@5.2.3(jiti@1.21.6)(rollup@4.28.1)(typescript@5.7.2)(yaml@2.6.1))(tailwindcss@3.4.16)
+        version: 6.0.0(astro@5.2.5(jiti@1.21.6)(rollup@4.28.1)(typescript@5.7.2)(yaml@2.6.1))(tailwindcss@3.4.16)
       '@expressive-code/plugin-line-numbers':
         specifier: ^0.40.1
         version: 0.40.1
@@ -30,14 +30,14 @@ importers:
         specifier: ^19.0.3
         version: 19.0.3(@types/react@19.0.8)
       astro:
-        specifier: ^5.2.3
-        version: 5.2.3(jiti@1.21.6)(rollup@4.28.1)(typescript@5.7.2)(yaml@2.6.1)
+        specifier: ^5.2.5
+        version: 5.2.5(jiti@1.21.6)(rollup@4.28.1)(typescript@5.7.2)(yaml@2.6.1)
       astro-expressive-code:
         specifier: ^0.40.1
-        version: 0.40.1(astro@5.2.3(jiti@1.21.6)(rollup@4.28.1)(typescript@5.7.2)(yaml@2.6.1))
+        version: 0.40.1(astro@5.2.5(jiti@1.21.6)(rollup@4.28.1)(typescript@5.7.2)(yaml@2.6.1))
       lucide-astro:
         specifier: ^0.473.0
-        version: 0.473.0(astro@5.2.3(jiti@1.21.6)(rollup@4.28.1)(typescript@5.7.2)(yaml@2.6.1))
+        version: 0.473.0(astro@5.2.5(jiti@1.21.6)(rollup@4.28.1)(typescript@5.7.2)(yaml@2.6.1))
       react:
         specifier: ^19.0.0
         version: 19.0.0
@@ -67,8 +67,8 @@ packages:
   '@astrojs/compiler@2.10.3':
     resolution: {integrity: sha512-bL/O7YBxsFt55YHU021oL+xz+B/9HvGNId3F9xURN16aeqDK9juHGktdkCSXz+U4nqFACq6ZFvWomOzhV+zfPw==}
 
-  '@astrojs/internal-helpers@0.5.0':
-    resolution: {integrity: sha512-CgB5ZaZO1PFG+rbjF3HnA7G6gIBjJ070xb7bUjeu5Gqqufma+t6fpuRWMXnK2iEO3zVyX7e/xplPlqtFKy/lvw==}
+  '@astrojs/internal-helpers@0.5.1':
+    resolution: {integrity: sha512-M7rAge1n2+aOSxNvKUFa0u/KFn0W+sZy7EW91KOSERotm2Ti8qs+1K0xx3zbOxtAVrmJb5/J98eohVvvEqtNkw==}
 
   '@astrojs/markdown-remark@6.1.0':
     resolution: {integrity: sha512-emZNNSTPGgPc3V399Cazpp5+snogjaF04ocOSQn9vy3Kw/eIC4vTQjXOrWDEoSEy+AwPDZX9bQ4wd3bxhpmGgQ==}
@@ -767,8 +767,8 @@ packages:
     peerDependencies:
       astro: ^4.0.0-beta || ^5.0.0-beta || ^3.3.0
 
-  astro@5.2.3:
-    resolution: {integrity: sha512-04AceE/gVihtO3V28Ss0+tPPgLHGoulXrm1E7fUVPYyQu7y6w8+oXfYyzh1lpy+uEYiebjH7AFlJoz73anBmZA==}
+  astro@5.2.5:
+    resolution: {integrity: sha512-AYXyYkc+c5xbKTm48FyQA91y81nXyNPAaoyafR0LUugE4lAwuvIUcXDBfMzmbuP1lGRvsE33G2oypv6gbGaPFg==}
     engines: {node: ^18.17.1 || ^20.3.0 || >=22.0.0, npm: '>=9.6.5', pnpm: '>=7.1.0'}
     hasBin: true
 
@@ -2168,10 +2168,6 @@ packages:
     resolution: {integrity: sha512-n1brCuqClxfFfq/Rb0ICg9giSZqCS+pLtccdag6C2HyufBrh3fBOiy9nb6ggRMvWOVH5GrdJskj5iGTZNxd7SA==}
     engines: {node: '>=4'}
 
-  which-pm@3.0.0:
-    resolution: {integrity: sha512-ysVYmw6+ZBhx3+ZkcPwRuJi38ZOTLJJ33PSHaitLxSKUMsh0LkKd0nC69zZCwt5D+AYUcMK2hhw4yWny20vSGg==}
-    engines: {node: '>=18.12'}
-
   which-pm@3.0.1:
     resolution: {integrity: sha512-v2JrMq0waAI4ju1xU5x3blsxBBMgdgZve580iYMN5frDaLGjbA24fok7wKCsya8KLVO19Ju4XDc5+zTZCJkQfg==}
     engines: {node: '>=18.12'}
@@ -2252,7 +2248,7 @@ snapshots:
 
   '@astrojs/compiler@2.10.3': {}
 
-  '@astrojs/internal-helpers@0.5.0': {}
+  '@astrojs/internal-helpers@0.5.1': {}
 
   '@astrojs/markdown-remark@6.1.0':
     dependencies:
@@ -2279,12 +2275,12 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@astrojs/mdx@4.0.8(astro@5.2.3(jiti@1.21.6)(rollup@4.28.1)(typescript@5.7.2)(yaml@2.6.1))':
+  '@astrojs/mdx@4.0.8(astro@5.2.5(jiti@1.21.6)(rollup@4.28.1)(typescript@5.7.2)(yaml@2.6.1))':
     dependencies:
       '@astrojs/markdown-remark': 6.1.0
       '@mdx-js/mdx': 3.1.0(acorn@8.14.0)
       acorn: 8.14.0
-      astro: 5.2.3(jiti@1.21.6)(rollup@4.28.1)(typescript@5.7.2)(yaml@2.6.1)
+      astro: 5.2.5(jiti@1.21.6)(rollup@4.28.1)(typescript@5.7.2)(yaml@2.6.1)
       es-module-lexer: 1.6.0
       estree-util-visit: 2.0.0
       hast-util-to-html: 9.0.4
@@ -2325,9 +2321,9 @@ snapshots:
       - tsx
       - yaml
 
-  '@astrojs/tailwind@6.0.0(astro@5.2.3(jiti@1.21.6)(rollup@4.28.1)(typescript@5.7.2)(yaml@2.6.1))(tailwindcss@3.4.16)':
+  '@astrojs/tailwind@6.0.0(astro@5.2.5(jiti@1.21.6)(rollup@4.28.1)(typescript@5.7.2)(yaml@2.6.1))(tailwindcss@3.4.16)':
     dependencies:
-      astro: 5.2.3(jiti@1.21.6)(rollup@4.28.1)(typescript@5.7.2)(yaml@2.6.1)
+      astro: 5.2.5(jiti@1.21.6)(rollup@4.28.1)(typescript@5.7.2)(yaml@2.6.1)
       autoprefixer: 10.4.20(postcss@8.5.1)
       postcss: 8.5.1
       postcss-load-config: 4.0.2(postcss@8.5.1)
@@ -2952,15 +2948,15 @@ snapshots:
 
   astring@1.9.0: {}
 
-  astro-expressive-code@0.40.1(astro@5.2.3(jiti@1.21.6)(rollup@4.28.1)(typescript@5.7.2)(yaml@2.6.1)):
+  astro-expressive-code@0.40.1(astro@5.2.5(jiti@1.21.6)(rollup@4.28.1)(typescript@5.7.2)(yaml@2.6.1)):
     dependencies:
-      astro: 5.2.3(jiti@1.21.6)(rollup@4.28.1)(typescript@5.7.2)(yaml@2.6.1)
+      astro: 5.2.5(jiti@1.21.6)(rollup@4.28.1)(typescript@5.7.2)(yaml@2.6.1)
       rehype-expressive-code: 0.40.1
 
-  astro@5.2.3(jiti@1.21.6)(rollup@4.28.1)(typescript@5.7.2)(yaml@2.6.1):
+  astro@5.2.5(jiti@1.21.6)(rollup@4.28.1)(typescript@5.7.2)(yaml@2.6.1):
     dependencies:
       '@astrojs/compiler': 2.10.3
-      '@astrojs/internal-helpers': 0.5.0
+      '@astrojs/internal-helpers': 0.5.1
       '@astrojs/markdown-remark': 6.1.0
       '@astrojs/telemetry': 3.2.0
       '@oslojs/encoding': 1.1.0
@@ -3011,7 +3007,7 @@ snapshots:
       vfile: 6.0.3
       vite: 6.0.11(jiti@1.21.6)(yaml@2.6.1)
       vitefu: 1.0.5(vite@6.0.11(jiti@1.21.6)(yaml@2.6.1))
-      which-pm: 3.0.0
+      which-pm: 3.0.1
       xxhash-wasm: 1.1.0
       yargs-parser: 21.1.1
       yocto-spinner: 0.2.0
@@ -3709,9 +3705,9 @@ snapshots:
     dependencies:
       yallist: 3.1.1
 
-  lucide-astro@0.473.0(astro@5.2.3(jiti@1.21.6)(rollup@4.28.1)(typescript@5.7.2)(yaml@2.6.1)):
+  lucide-astro@0.473.0(astro@5.2.5(jiti@1.21.6)(rollup@4.28.1)(typescript@5.7.2)(yaml@2.6.1)):
     dependencies:
-      astro: 5.2.3(jiti@1.21.6)(rollup@4.28.1)(typescript@5.7.2)(yaml@2.6.1)
+      astro: 5.2.5(jiti@1.21.6)(rollup@4.28.1)(typescript@5.7.2)(yaml@2.6.1)
 
   magic-string@0.30.17:
     dependencies:
@@ -3719,8 +3715,8 @@ snapshots:
 
   magicast@0.3.5:
     dependencies:
-      '@babel/parser': 7.26.3
-      '@babel/types': 7.26.3
+      '@babel/parser': 7.26.7
+      '@babel/types': 7.26.7
       source-map-js: 1.2.1
 
   markdown-extensions@2.0.0: {}
@@ -4881,10 +4877,6 @@ snapshots:
   web-namespaces@2.0.1: {}
 
   which-pm-runs@1.1.0: {}
-
-  which-pm@3.0.0:
-    dependencies:
-      load-yaml-file: 0.2.0
 
   which-pm@3.0.1:
     dependencies:
