@@ -5,6 +5,7 @@
 <!-- https://github.com/huozhi/sugar-high  or shiki -->
 
 Todo:
-- [ ] Post page
-- [ ] seo things
+- [X] Post page
+- [ ] SEO stuff
+- [ ] Change code block later, too thicc
 - [ ] write content
