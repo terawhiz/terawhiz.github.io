@@ -7,7 +7,7 @@ const {href, className} = Astro.props;
 
 <a 
   href={href[0] === '/' ? href : href + "?ref=" + REF_URL} 
-  class={"underline font-medium text-color-2 " + className}
+  class={"underline font-medium !text-foreground " + className}
 >
   <slot />
 </a>
