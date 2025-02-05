@@ -78,6 +78,32 @@
     @apply relative lg:sticky top-0 z-0 flex items-center justify-between py-2 lg:py-4;
   }
 
+  /* Global table styles */
+  table {
+    @apply min-w-full table-auto border-collapse border border-muted;
+  }
+
+  th, td {
+    @apply !px-4 !py-2 !border-b-2 text-sm border-muted;
+  }
+
+  thead {
+    @apply bg-muted text-left;
+  }
+
+  th {
+    @apply font-medium text-muted-foreground;
+  }
+
+  tbody tr:hover {
+    @apply bg-accent text-accent-foreground;
+  }
+
+  td {
+    @apply text-foreground;
+  }
+
+
   html.dark .astro-code,
   html.dark .astro-code span {
     color: var(--shiki-dark) !important;
