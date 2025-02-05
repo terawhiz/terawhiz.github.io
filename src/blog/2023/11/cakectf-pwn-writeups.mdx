@@ -1,0 +1,125 @@
+---
+title: pwn writeups for CakeCTF 2023
+description: Writeups for the binary exploitation challenges in CakeCTF 2023
+author: Shunt
+tags: ["pwn"]
+pubDate: '2023-11-14'
+---
+
+These writeups were originaly posted on my [github](https://github.com/terawhiz/CTF-Writeups/tree/main/2023/CakeCTF/pwn).
+
+# vtable4b
+```
+Do you understand what vtable is?
+
+nc vtable4b.2023.cakectf.com 9000
+```
+
+This was the most easiest pwn challenge in this ctf, easier than the Survey challenge.
+
+tl;dr
+- Craft a fake vtable with win function in the message buffer
+- Overwrite vtable address with address of message buffer
+- Then call the dialogue method to call win function
+
+Flag: `CakeCTF{vt4bl3_1s_ju5t_4n_arr4y_0f_funct1on_p0int3rs}`
+
+---
+
+# bofww
+```
+buffer overflow with win function
+
+nc bofww.2023.cakectf.com 9002
+```
+As the name challenge name implies this was an easy Stack buffer overflow pwn. The handout file contains a cpp source file, binary and dockerfiles. The binary was compiled with partial relro, no pie and canary. And there's a win function which gives a shell. Therefore now our goal is to control rip.
+
+Reading the cpp source code we can find a stack buffer overflow on the `_name` variable in `input_person` function. The `std::cin` object accepts arbitrary amount of input until a white space or newline character is met.
+```c
+void input_person(int& age, std::string& name) {
+  int _age;
+  char _name[0x100];
+  std::cout << "What is your first name? ";
+  std::cin >> _name;
+  ...
+}
+```
+
+Providing a long input to the program we can see gdb crash in memmove libc function at `__memmove_avx_unaligned_erms+77` which copies a dword pointed by `rsi` register to the address pointed by `rdi`.
+```gdb
+ ► 0x7f89834069cd <__memmove_avx_unaligned_erms+77>  mov    word ptr [rdi + rdx - 2], si  <__stack_chk_fail@got.plt+1>
+   0x7f89834069d2 <__memmove_avx_unaligned_erms+82>  mov    byte ptr [rdi], cl
+   0x7f89834069d4 <__memmove_avx_unaligned_erms+84>  ret
+```
+
+Awesome, now we've acquired an arbitrary address write primitive. With this primitive we can write to any memory with writable permission set.
+By overflowing the `_name` buffer we're damaging the stack canary so the `__stack_chk_fail` will be called before returning from `input_person` function. We could utilize it by writing win address to the `__stack_chk_fail` GOT entry.
+
+Win function is called and we get a shell : )
+
+When I solved the challenge I didn't really know why we're able to perform arbitrary write. Then later realized its because of `name = _name` instruction. Also thanks to someone in discord for giving a better explanation.
+
+> [7:51 AM] IceCreamMan: At the end of the buffer overflow after the canary, there is an address to the string argument that was passed into the input_person function. The buffer overflow will overwrite that string to any target address, in this case the GOT of stack chk fail
+
+There's a second part this challenge called `bofwow` where there's no win function. Read the challenge's writeup [here](../bofwow/)
+
+Flag: `CakeCTF{n0w_try_w1th0ut_w1n_func710n:)}`
+
+---
+
+# bofwow
+```
+buffer overflow without win function
+
+nc bofwow.2023.cakectf.com 9003
+```
+{/* This is a writeup for second part of the challenge `bofww` and mostly focused on exploitation part. The bug is detailed in the other [writeup](../bofww/). */}
+
+
+The win function has been removed in this challenge, but we've got onegadget. To use a onegadget libc base address is needed, but we don't have a libc address. How can we exploit this? This challenge can be solved without any leak by using a very powerful add-what-where primitive gadget.
+```
+0x00000000004012bc : add dword ptr [rbp - 0x3d], ebx ; nop ; ret
+```
+
+
+With the arbitrary write primitive overwrite `__stack_chk` GOT entry with `main` function address. Now the program is run again and again as long as the canary is changed in `input_person` function.
+
+Perform stack pivoting and set rsp to bss section where we will be writing our rop chain. Our rop chain is pretty short.
+
+1) Control `ebx` register contents. This gadget moves a dword pointed by `rbp-8` into `ebx` register. EBX will be added to the got entry of `setbuf` which will result in onegadget.
+```
+mov ebx, dword ptr [rbp - 8] ; leave ; ret
+```
+2) Perform 32bit addition on `ebx` to `[rbp-0x3d]` using the add-what-where gadget.
+```
+add dword ptr [rbp - 0x3d], ebx ; nop ; ret
+```
+
+Now the GOT entry of `setbuf` will contain our onegadget address.
+
+3) Jump to `_start` or `setup` function which will eventually call the onegadget. And we get a shell!!
+
+
+Flag: `CakeCTF{1_h3r3by_c3rt1fy_th4t_y0u_h4v3_c0mpl3ted_3very7h1ng_4b0ut_ROP}`
+
+---
+
+# Memorial Cabbage
+```
+Memorial Cabbage Unit 3
+
+nc memorialcabbage.2023.cakectf.com 9001
+```
+
+In the challenge handout a binary, its c source and dockerfiles were provided.
+
+There are two features in the program write memo and read memo. Write memo writes our message to a file at a temporary path and read memo reads the content of the file and displays it to the user.
+
+The problem here is the use of `mkdtemp` function.
+> The mkdtemp() function returns a pointer to the modified template string on success, and NULL on failure
+
+A stack buffer is used as an argument to the function therefore `mkdtemp` returns a stack pointer. But the returned stack pointer is stored in `tempdir` pointer variable and used it across other two functions to read files.
+
+We can overwrite the random directory buffer with `/flag.txt\x00` using the write memo feature. The calling read memo function the flag is printed on the screen.
+
+Flag: `CakeCTF{B3_c4r3fuL_s0m3_libc_fuNcT10n5_r3TuRn_5t4ck_p01nT3r}`

@@ -30,7 +30,7 @@ function formatDate(dateString) {
             <a href={`/${post.id}/`} class="text-md font-semibold text-muted-foreground dark:text-foreground transition-colors">
               {post.data.title}
             </a>
-            <span class="text-sm text-muted-foreground">{formatDate(post.data.pubDate)}</span>
+            <span class="text-sm text-muted-foreground ml-4">{formatDate(post.data.pubDate)}</span>
           </li>
         ))
       }
