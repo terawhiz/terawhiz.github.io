@@ -28,7 +28,8 @@ const {title, } = Astro.props;
       (function() {
         window.isDark = false;
         const savedTheme = localStorage.getItem('theme');
-        window.isDark = savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches);
+        window.isDark = savedTheme === 'dark';
+        // window.isDark = savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches);
         document.documentElement.classList[window.isDark ? 'add' : 'remove']('dark');
     
         window.updateToggleIcon = function() {
