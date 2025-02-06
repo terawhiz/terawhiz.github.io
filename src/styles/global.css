@@ -128,8 +128,7 @@
 
     /* Global table styles */
     table {
-      @apply min-w-full table-auto border-collapse border border-muted;
-      @apply overflow-x-auto whitespace-normal;
+      @apply table-auto border-collapse border border-muted;
     }
 
     th, td {
