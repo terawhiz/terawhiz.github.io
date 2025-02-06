@@ -101,6 +101,18 @@
   .disable-transitions * {
     @apply !transition-none;
   }
+
+  *::selection {
+    @apply bg-muted text-foreground/80;
+  }
+
+  *::-moz-selection {
+    @apply bg-muted text-foreground/80;
+  }
+
+  *::-webkit-selection {
+    @apply bg-muted text-foreground/80;
+  }
 }
 
 @layer components {
