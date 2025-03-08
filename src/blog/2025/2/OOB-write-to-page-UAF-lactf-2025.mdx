@@ -1,6 +1,6 @@
 ---
 title: "From OOB Write to Root: Exploiting 3-Byte Overflow in LACTF 2025"
-description: Exploiting a 3 byte OOB write to root in a Linux kernel pwnable from LACTF 2025
+description: Exploiting a 3 byte OOB write to root in a Linux kernel pwnable
 author: Shunt
 tags: ["pwn"]
 pubDate: '2025-02-12'
@@ -13,6 +13,11 @@ import Figure1 from './figure_1.svg';
 import Figure2 from './figure_2.svg';
 import Figure3 from './figure_3.svg';
 import Figure4 from './figure_4.svg';
+
+import DarkFigure1 from './dark_figure_1.svg';
+import DarkFigure2 from './dark_figure_2.svg';
+import DarkFigure3 from './dark_figure_3.svg';
+import DarkFigure4 from './dark_figure_4.svg';
 
 <TemporaryAlert client:load />
 
@@ -115,7 +120,8 @@ struct pipe_buffer {
 
 First, to ensure our `msg_msg` is placed right before our target `pipe_buffer` object, spray a large amount of `pipe_buffer` objects and release a few in the middle. Recapture the freed `pipe_buffer` slots with `msg_msg` and use the OOB write to overwrite exactly 1 byte of the first quad-word of `pipe_buffer`, i.e., `struct page` pointer. I overwrote the Least Significant Byte of `struct page*` with `0x40`, as `struct page` pointer's LSB always end with a multiple of `0x40` because of its size.
 
-<Image src={Figure1} alt="Figure 1" />
+<Image src={Figure1} alt="Figure 1" class="dark:hidden" />
+<Image src={DarkFigure1} alt="Figure 1" class="hidden dark:block" />
 
 ```c
 printf("[+] Spraying pipe_buffer\n");
@@ -142,7 +148,8 @@ printf("[+] OOB success\n");
 ```
 If we successfully fill the hole correctly, two pipes should now point to the same physical memory page. We can then identify the overlapping page by simply reading the marked unique value off the pipe. If a duplicate value has been found that means the the duplicate pipe has been found. If the read value does not match the marked unique integer, that pipe is the overlapping target pipe.
 
-<Image src={Figure2} alt="Figure 2"/>
+<Image src={Figure2} alt="Figure 2" class="dark:hidden" />
+<Image src={DarkFigure2} alt="Figure 2" class="hidden dark:block" />
 
 ```c
 for (int i = 0; i < PIPE_SPRAY_CNT; i++) {
@@ -169,7 +176,8 @@ printf("[+] Found overlapped pipe_buffer\n");
 
 Now that we've found the overlapped pipes, we can release one of the pipes, hence the page goes back to page allocator. But we still got the reference to the page in another pipe. 
 
-<Image src={Figure3} alt="Figure 3" tooltip="hello" />
+<Image src={Figure3} alt="Figure 3" class="dark:hidden" />
+<Image src={DarkFigure3} alt="Figure 3" class="hidden dark:block" />
 
 ```c
 printf("[+] Freeing a page\n");
@@ -187,7 +195,8 @@ But creating a new process creates a lot of noise where some other caches might 
 
 Unlike generic objects which are stored in `kmalloc` slab, `cred` is stored in an isolated `cred_jar` slab and when needed `prepare_creds` function is used to allocate a set of cred from it. The trick here is before some other kernel feature devouring our UAF page, we devour it ourselves using `setuid` or some other `set*` syscalls. Repeatedly calling setuid will drain the `cred_jar` cache, so kernel will re-fill the cache by getting pages from the page allocator without much noise as fork would.
 
-<Image src={Figure4} alt="Figure 4"/>
+<Image src={Figure4} alt="Figure 4" class="dark:hidden" />
+<Image src={DarkFigure4} alt="Figure 4" class="hidden dark:block" />
 
 I followed this method and sprayed `cred` structure with `setuid` syscall and then allocated a cred in the UAF page using fork, then kept checking uid of the child processes to see if any of them became root, if a process was root it will print the flag and give us a root shell.
 
