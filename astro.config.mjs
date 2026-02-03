@@ -8,7 +8,7 @@ import expressiveCode from 'astro-expressive-code';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://terawhiz.github.io/',
+  site: 'https://blog.shunt.in/',
   integrations: [tailwind({
     applyBaseStyles: false,
   }), expressiveCode({
@@ -17,10 +17,7 @@ export default defineConfig({
   trailingSlash: 'ignore',
   server: {
     port: 4321,
-    host: "0.0.0.0",
-    allowedHosts: [
-      '8970cf6c501a.ngrok-free.app'
-    ]
+    host: "0.0.0.0"
   },
   devToolbar: {
     enabled: false,

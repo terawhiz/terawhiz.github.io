@@ -1,4 +1,4 @@
-export const REF_URL = "terawhiz.github.io";
+export const REF_URL = "blog.shunt.in";
 
 export const SOCIALS = [
   { href: 'https://github.com/terawhiz', label: 'Github' },
