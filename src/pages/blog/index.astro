@@ -21,19 +21,42 @@ function formatDate(dateString) {
 
 ---
 <MainLayout title="Archive - Blog">
-  <div class="max-w-3xl mx-auto px-4 py-8">
-    <h1 class="text-3xl font-bold text-center text-gray-900 dark:text-white mb-8">Archive of Blog Posts</h1>
-    <ul class="space-y-6">
+  <div class="max-w-4xl mx-auto px-6 py-12 w-full">
+    <div class="mb-12 border-b border-border pb-8">
+      <h1 class="text-3xl md:text-4xl font-bold text-foreground mb-4">Blog Archive</h1>
+      <p class="text-muted-foreground font-mono text-sm">Exploring Linux kernel internals and vulnerability research.</p>
+    </div>
+    
+    <div class="space-y-4">
       {
         allPosts.map((post) => (
-          <li class="flex justify-between items-center p-6 bg-muted dark:bg-muted rounded-lg shadow-md dark:shadow-md hover:shadow-lg dark:shadow-muted-foreground dark:hover:shadow-muted-foreground dark:hover:shadow-lg transition-shadow">
-            <a href={`/${post.id}/`} class="text-md font-semibold text-muted-foreground dark:text-foreground transition-colors">
-              {post.data.title}
-            </a>
-            <span class="text-sm text-muted-foreground ml-4">{formatDate(post.data.pubDate)}</span>
-          </li>
+          <a href={`/${post.id}/`} class="group block p-5 bg-muted/30 hover:bg-muted/50 border border-border rounded-xl transition-all hover:translate-x-1">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <div class="flex-grow">
+                <h2 class="text-lg font-bold text-foreground group-hover:text-primary transition-colors mb-1">
+                  {post.data.title}
+                </h2>
+                <p class="text-muted-foreground line-clamp-2 text-sm leading-relaxed">
+                  {post.data.description}
+                </p>
+                {post.data.tags && (
+                  <div class="flex gap-2 mt-4">
+                    {post.data.tags.map(tag => (
+                      <span class="text-[10px] uppercase tracking-widest font-mono bg-background px-2 py-0.5 border border-border rounded text-muted-foreground">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </div>
+              <div class="shrink-0 flex items-center md:flex-col md:items-end gap-2 text-muted-foreground font-mono text-sm">
+                <span>{formatDate(post.data.pubDate)}</span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="hidden md:block opacity-0 group-hover:opacity-100 transition-opacity"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+              </div>
+            </div>
+          </a>
         ))
       }
-    </ul>
+    </div>
   </div>
 </MainLayout>

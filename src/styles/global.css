@@ -61,7 +61,11 @@
   }
 
   .grid {
-    @apply fixed inset-0 -z-10 h-full w-full bg-background bg-[linear-gradient(to_right,hsl(var(--border))_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--border))_1px,transparent_1px)] bg-[size:2rem_2rem];
+    @apply fixed inset-0 -z-10 h-full w-full bg-background bg-[linear-gradient(to_right,hsl(var(--border)/0.5)_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--border)/0.5)_1px,transparent_1px)] bg-[size:2rem_2rem];
+  }
+
+  html.dark .grid {
+    @apply bg-[linear-gradient(to_right,hsl(var(--primary)/0.05)_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--primary)/0.05)_1px,transparent_1px)];
   }
 
   .notch {
@@ -69,9 +73,18 @@
        bg-[radial-gradient(100%_50%_at_50%_100%,hsl(var(--primary)/0.16)_0%,hsl(var(--primary)/0)_50%,hsl(var(--primary)/0)_100%)];
   }
 
+  .notch-top {
+    @apply fixed top-0 left-0 right-0 h-[20vh] z-[-1]
+       bg-[radial-gradient(100%_50%_at_50%_0%,hsl(var(--primary)/0.08)_0%,hsl(var(--primary)/0)_50%,hsl(var(--primary)/0)_100%)];
+  }
+
   html.dark .notch {
     @apply top-0 bottom-auto z-[-1]
       bg-[radial-gradient(100%_50%_at_50%_0%,hsl(var(--primary)/0.16)_0%,hsl(var(--primary)/0)_50%,hsl(var(--primary)/0)_100%)];
+  }
+
+  html.dark .notch-top {
+    @apply hidden;
   }
 
   header {
@@ -117,11 +130,27 @@
 
 @layer components {
   article {
-    @apply prose-headings:!text-foreground prose-headings:scroll-mt-20 prose-headings:break-words first:prose-headings:mt-0 prose-p:break-words prose-a:!break-words prose-a:!decoration-muted-foreground prose-a:underline-offset-[3px] prose-a:transition-colors hover:prose-a:!decoration-foreground prose-pre:!px-0 prose-img:mx-auto relative rounded-lg shadow-sm bg-background !text-muted-foreground
+    @apply prose-headings:!text-foreground prose-headings:scroll-mt-20 prose-headings:break-words first:prose-headings:mt-0 prose-p:break-words prose-a:!break-words prose-a:!decoration-muted-foreground prose-a:underline-offset-[3px] prose-a:transition-colors hover:prose-a:!decoration-foreground prose-pre:!px-0 prose-img:mx-auto relative !text-muted-foreground
       prose-table:mx-auto prose-table:block prose-table:max-w-fit prose-table:overflow-x-auto prose-td:break-words sm:prose-table:mx-0 sm:prose-table:table sm:prose-table:max-w-none;
 
     h1 {
       @apply text-4xl font-bold leading-tight gap-y-6 text-left;
+    }
+
+    h2 {
+      @apply text-2xl font-bold mt-12 mb-4 text-foreground border-b-2 border-border pb-2;
+    }
+
+    h3 {
+      @apply text-xl font-bold mt-8 mb-4 text-foreground;
+    }
+
+    p {
+      @apply leading-relaxed mb-6;
+    }
+
+    .markdown-content {
+      @apply text-base;
     }
 
     .theme-toggle {
@@ -135,40 +164,44 @@
 
     /* Inline code */
     :not(pre) > code {
-      @apply relative rounded bg-muted/50 px-[0.3rem] py-[0.2rem] font-mono text-sm font-medium !text-foreground;
+      @apply relative rounded bg-muted/40 px-[0.3rem] py-[0.1rem] font-mono text-[0.9em] font-medium !text-foreground border border-border/30;
     }
 
     /* Global table styles */
     table {
-      @apply table-auto border-collapse border border-muted;
+      @apply w-full table-auto border-collapse border border-border my-8;
     }
 
     th, td {
-      @apply !px-4 !py-2 border-b-2 text-sm border-muted;
+      @apply !px-4 !py-3 border border-border text-sm;
     }
 
     thead {
-      @apply bg-muted text-left;
+      @apply bg-muted/50 text-left;
     }
 
     th {
-      @apply font-medium text-muted-foreground;
+      @apply font-bold text-foreground uppercase tracking-wider;
+    }
+
+    tbody tr:nth-child(even) {
+      @apply bg-muted/20;
     }
 
     tbody tr:hover {
-      @apply bg-accent text-accent-foreground;
+      @apply bg-accent/30 text-accent-foreground transition-colors;
     }
 
     td {
-      @apply text-foreground;
+      @apply text-foreground font-mono;
     }
 
     hr {
-      @apply !border-t-2 !border-muted !my-4;
+      @apply !border-t-2 !border-border !my-12;
     }
 
     blockquote {
-      @apply !border-accent;
+      @apply !border-l-4 !border-primary !bg-muted/30 !py-2 !px-6 !my-8 !rounded-r-lg italic;
     }
   }
 }

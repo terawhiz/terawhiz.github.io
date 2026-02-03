@@ -67,11 +67,12 @@ const {title, } = Astro.props;
     <div class="grid"></div>
     <div class="page flex flex-col min-h-screen">
         { !isHome && <Header /> }
-        <main class="flex-grow flex justify-center">
+        <main class={`flex-grow flex justify-center ${!isHome ? 'pt-20 lg:pt-24' : ''}`}>
           <slot />
         </main>
         { !isHome && <Footer /> }
         <div class="notch"></div>
+        <div class="notch-top"></div>
     </div>
   </body>
 </html>
